@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>169 ARCADE</title>
+<meta name="theme-color" content="#090b17">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap');
+:root{--bg:#090b17;--panel:#11152a;--panel2:#171d36;--line:#293252;--text:#f4f5ff;--muted:#98a1c4;--purple:#8b5cf6;--pink:#ff4fa3;--cyan:#35d7ff;--lime:#b9ff63}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0%,#191b3a 0,transparent 34%),radial-gradient(circle at 90% 15%,#201238 0,transparent 28%),var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh}
+button,input{font:inherit}button{cursor:pointer;border:0;color:inherit}
+.shell{max-width:1200px;margin:auto;padding:22px 24px 60px}
+header{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:34px}
+.brand{display:flex;align-items:center;gap:12px;font-family:Orbitron,sans-serif;font-weight:900;letter-spacing:1px}
+.logo{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,var(--purple),var(--pink));box-shadow:0 0 25px #8b5cf655;font-size:17px}
+.brand span{font-size:20px}.brand small{color:var(--cyan);font-size:10px;letter-spacing:3px;display:block;margin-top:3px}
+.topright{display:flex;align-items:center;gap:10px}.pill{padding:9px 13px;border:1px solid var(--line);background:#12162a;border-radius:99px;color:var(--muted);font-size:13px}.profile{display:flex;align-items:center;gap:9px}.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#ff4fa3,#8b5cf6);display:grid;place-items:center;font-weight:bold}
+.hero{position:relative;overflow:hidden;border:1px solid #34365e;border-radius:28px;background:linear-gradient(115deg,#191b39 0%,#24143b 55%,#111b36 100%);padding:42px;min-height:270px;margin-bottom:26px}
+.hero:after{content:"169";position:absolute;right:5%;top:-25px;font-family:Orbitron,sans-serif;font-size:clamp(130px,25vw,300px);font-weight:900;color:#ffffff08;line-height:1;pointer-events:none}
+.eyebrow{color:var(--cyan);font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase}
+.hero h1{font-family:Orbitron,sans-serif;font-size:clamp(30px,5vw,54px);line-height:1.08;margin:15px 0 12px;max-width:650px}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--pink),#a78bfa,var(--cyan));-webkit-background-clip:text;color:transparent}
+.hero p{color:#b4bddb;max-width:500px;margin:0 0 22px;line-height:1.6}
+.btn{border-radius:12px;padding:12px 17px;font-weight:700;transition:.18s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.1)}.primary{background:linear-gradient(100deg,var(--purple),var(--pink));box-shadow:0 7px 24px #8b5cf633}.secondary{background:#1a2140;border:1px solid #39456b}.ghost{background:transparent;border:1px solid var(--line)}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 28px}
+.stat{padding:16px;border:1px solid var(--line);background:#11152a;border-radius:17px}.stat strong{font-size:22px;display:block;font-family:Orbitron}.stat span{font-size:12px;color:var(--muted)}
+.sectionhead{display:flex;justify-content:space-between;align-items:end;margin:26px 0 14px}.sectionhead h2{margin:0;font-size:21px}.sectionhead p{color:var(--muted);margin:5px 0 0;font-size:13px}
+.games{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.game{border:1px solid var(--line);background:linear-gradient(160deg,#171c35,#101326);border-radius:20px;padding:18px;min-height:180px;display:flex;flex-direction:column;transition:.2s}
+.game:hover{transform:translateY(-3px);border-color:#6265a0;box-shadow:0 15px 35px #0003}
+.gameicon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:25px;margin-bottom:12px;background:#282447}
+.game h3{margin:0 0 5px;font-size:16px}.game p{margin:0;color:var(--muted);font-size:12px;line-height:1.5;flex:1}
+.gamefoot{display:flex;justify-content:space-between;align-items:center;margin-top:15px}.tag{font-size:10px;color:#b9c1e4;background:#222943;border-radius:30px;padding:6px 9px}.play{color:var(--cyan);font-size:12px;font-weight:700;background:none}
+.roombar{display:flex;gap:10px;flex-wrap:wrap;padding:16px;border:1px solid var(--line);border-radius:18px;background:#11152a;margin-top:20px}.roombar input{flex:1;min-width:140px;background:#090c19;border:1px solid var(--line);border-radius:11px;padding:12px;color:white;outline:none}.roombar input:focus{border-color:var(--purple)}
+.footer{margin-top:36px;color:#697292;text-align:center;font-size:12px}
+.auth-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.auth-btn{padding:9px 11px;font-size:12px}
+#authStatus{font-size:11px;color:var(--muted);margin-top:5px}
+@media(max-width:520px){.auth-actions{gap:5px}.auth-btn{padding:8px 9px;font-size:11px}}
+.modalwrap{position:fixed;inset:0;background:#050611c9;backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:18px;z-index:10}.modalwrap.show{display:flex}
+.modal{width:min(650px,100%);max-height:90vh;overflow:auto;border:1px solid #454b75;border-radius:24px;background:linear-gradient(160deg,#171b35,#0e1122);padding:24px;box-shadow:0 30px 90px #0008}
+.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.modalhead h2{margin:0;font-family:Orbitron;font-size:20px}.close{background:#252b49;border-radius:10px;width:35px;height:35px;font-size:20px}
+.screen{display:none}.screen.active{display:block}.question{font-size:22px;font-weight:700;margin:15px 0 20px}.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}.answer{padding:14px;background:#202644;border:1px solid #343d61;border-radius:13px;text-align:left}.answer:hover{border-color:var(--cyan)}.answer.correct{border-color:var(--lime);background:#243a2a}.answer.wrong{border-color:var(--pink);background:#3a2338}
+.progress{height:7px;background:#252b48;border-radius:20px;overflow:hidden}.progress div{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));width:0;transition:.3s}
+.result{text-align:center;padding:25px 5px}.result .big{font-size:55px}.result h2{font-family:Orbitron}.result p{color:var(--muted)}
+.reactionbox{height:220px;border-radius:18px;background:#242a47;display:grid;place-items:center;text-align:center;font-size:20px;font-weight:700;user-select:none;cursor:pointer;margin:14px 0;border:1px solid var(--line)}
+.reactionbox.wait{background:#a52846}.reactionbox.ready{background:#168b6c}.reactionbox.go{background:#b7ff5d;color:#10151e}
+.worddisplay{font-family:Orbitron;font-size:30px;letter-spacing:5px;text-align:center;padding:20px;color:var(--cyan)}
+.scrambleinput{width:100%;padding:12px;border:1px solid var(--line);border-radius:11px;background:#080b18;color:white;margin-bottom:10px}
+.roomcode{font-family:Orbitron;letter-spacing:5px;font-size:30px;color:var(--lime);text-align:center;padding:15px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);padding:12px 17px;border-radius:12px;background:#252c4b;border:1px solid #4c5884;display:none;z-index:20}
+.admin{border:1px dashed #7b68c7;background:#19142c;padding:14px;border-radius:15px;margin-top:18px;display:none}
+@media(max-width:800px){.games{grid-template-columns:repeat(2,1fr)}.hero{padding:27px}.hero h1{font-size:34px}.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:18px}}
+@media(max-width:520px){.shell{padding:15px}.brand span{font-size:16px}.pill{display:none}.hero{padding:23px;min-height:260px}.games{grid-template-columns:1fr}.game{min-height:155px}.stats{grid-template-columns:repeat(3,1fr)}.answers{grid-template-columns:1fr}.topright .profile span{display:none}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header>
+  <div class="brand"><div class="logo">169</div><div><span>ARCADE</span><small>PLAY TOGETHER</small></div></div>
+  <div class="topright">
+    <div class="pill">🟢 <b id="onlineCount">1</b> online</div>
+    <div class="profile"><div class="avatar" id="avatar">P</div><span id="playerName">Player</span></div>
+    <div class="auth-actions" id="authActions">
+      <button class="btn secondary auth-btn" id="googleLoginBtn" type="button" onclick="loginWithGoogle()">Google Login</button>
+      <button class="btn ghost auth-btn" id="guestLoginBtn" type="button" onclick="loginAsGuest()">Play as Guest</button>
+      <button class="btn ghost auth-btn" id="logoutBtn" type="button" onclick="logout()" style="display:none">Logout</button>
+    </div>
+  </div>
+</header>
+<div id="authStatus" aria-live="polite">Not signed in — choose Google Login or Play as Guest.</div>
+<section class="hero">
+  <div class="eyebrow">WELCOME TO THE ARCADE</div>
+  <h1>YOUR GROUP.<br><em>YOUR GAME.</em></h1>
+  <p>Challenge your friends, create rooms, climb the leaderboard, and make the group alive again.</p>
+  <div class="hero-actions"><button class="btn primary" onclick="openGame('quiz')">⚡ Play now</button><button class="btn secondary" onclick="createRoom()">＋ Create room</button></div>
+</section>
+<div class="stats">
+  <div class="stat"><strong id="xp">0</strong><span>YOUR XP</span></div>
+  <div class="stat"><strong id="wins">0</strong><span>WINS</span></div>
+  <div class="stat"><strong id="streak">1 🔥</strong><span>DAILY STREAK</span></div>
+</div>
+<div class="sectionhead"><div><h2>🎮 Game Library</h2><p>Pick your game. Invite the group.</p></div></div>
+<div class="games">
+  <article class="game"><div class="gameicon">🧠</div><h3>Quiz Battle</h3><p>Answer fast, collect points, beat everyone.</p><div class="gamefoot"><span class="tag">2–20 PLAYERS</span><button class="play" onclick="openGame('quiz')">PLAY →</button></div></article>
+  <article class="game"><div class="gameicon">⚡</div><h3>Reaction Race</h3><p>Wait for green. Tap as fast as you can.</p><div class="gamefoot"><span class="tag">SOLO / RACE</span><button class="play" onclick="openGame('reaction')">PLAY →</button></div></article>
+  <article class="game"><div class="gameicon">🔤</div><h3>Word Scramble</h3><p>Unscramble the letters before time runs out.</p><div class="gamefoot"><span class="tag">SOLO / RACE</span><button class="play" onclick="openGame('word')">PLAY →</button></div></article>
+  <article class="game"><div class="gameicon">🤔</div><h3>Would You Rather?</h3><p>Choose a side and see what the group thinks.</p><div class="gamefoot"><span class="tag">PARTY</span><button class="play" onclick="openGame('wyr')">PLAY →</button></div></article>
+  <article class="game"><div class="gameicon">🕵️</div><h3>Impostor</h3><p>Find the player who doesn't know the secret word.</p><div class="gamefoot"><span class="tag">COMING SOON</span><button class="play" onclick="toast('Impostor mode is on our next update 👀')">SOON →</button></div></article>
+  <article class="game"><div class="gameicon">🎨</div><h3>Draw & Guess</h3><p>Draw a prompt and let friends guess it.</p><div class="gamefoot"><span class="tag">COMING SOON</span><button class="play" onclick="toast('Draw & Guess is on our next update 🎨')">SOON →</button></div></article>
+  <article class="game"><div class="gameicon">🌍</div><h3>GeoGuess</h3><p>Guess countries and places from clues.</p><div class="gamefoot"><span class="tag">COMING SOON</span><button class="play" onclick="toast('GeoGuess is on our next update 🌍')">SOON →</button></div></article>
+  <article class="game"><div class="gameicon">🔐</div><h3>Escape Room</h3><p>Team up, solve clues, escape together.</p><div class="gamefoot"><span class="tag">COMING SOON</span><button class="play" onclick="toast('Escape Room is on our next update 🔐')">SOON →</button></div></article>
+  <article class="game"><div class="gameicon">🎲</div><h3>Bingo</h3><p>Random calls, lucky cards, first to win.</p><div class="gamefoot"><span class="tag">COMING SOON</span><button class="play" onclick="toast('Bingo is on our next update 🎲')">SOON →</button></div></article>
+</div>
+<div class="sectionhead"><div><h2>🏠 Play with your group</h2><p>Create a room, share its code, and let friends join live.</p></div></div>
+<div class="roombar"><button class="btn primary" onclick="createRoom()">＋ Create Room</button><input id="roomInput" placeholder="Enter room code"><button class="btn secondary" onclick="joinRoom()">Join Room</button></div>
+<div class="admin" id="admin"><b>👑 Owner Panel</b><p style="color:var(--muted);margin:8px 0">Prototype owner controls. The production admin panel will be protected by server-side authentication.</p><button class="btn ghost" onclick="resetStats()">Reset local stats</button></div>
+<div class="footer">169 ARCADE • A community playground • Multiplayer beta<br>Untuk login dan multiplayer, buka link HTTPS GitHub Pages di Chrome. Login diperlukan sebelum membuat atau bergabung ke room.</div>
+</div>
+
+<div class="modalwrap" id="modal" onclick="outsideClose(event)"><div class="modal"><div class="modalhead"><h2 id="modalTitle">GAME</h2><button class="close" onclick="closeModal()">×</button></div><div id="gameContent"></div></div></div>
+<div class="toast" id="toast"></div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  onAuthStateChanged,
+  signInAnonymously,
+  signOut,
+  setPersistence,
+  browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+import {
+  getDatabase, ref, set, get, update, onValue, onDisconnect, remove,
+  runTransaction, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+
+// Firebase project configuration supplied for 169-arcade.
+const firebaseConfig = {
+  apiKey: "AIzaSyD5aCUdqcpL5IkPk-bvlBqrb8euf_zPVU",
+  authDomain: "arcade-702a0.firebaseapp.com",
+  databaseURL: "https://arcade-702a0-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "arcade-702a0",
+  storageBucket: "arcade-702a0.firebasestorage.app",
+  messagingSenderId: "1040591536152",
+  appId: "1:1040591536152:web:693d99648fd6878ef9436d",
+  measurementId: "G-0BNYBGFZ0T"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+const db = getDatabase(firebaseApp);
+const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: "select_account" });
+
+let currentFirebaseUser = null;
+let activeRoomCode = null;
+let activeRoomData = null;
+let stopRoomListener = null;
+let presenceStop = null;
+
+function setAuthStatus(message) {
+  const status = document.getElementById("authStatus");
+  if (status) status.textContent = message;
+}
+
+function explainFirebaseError(error, action) {
+  const code = error?.code || "unknown-error";
+  if (code.includes("api-key-not-valid") || code.includes("invalid-api-key")) {
+    return action + " gagal: API key Firebase tidak diterima. Periksa API key Web App yang dipakai, API restrictions di Google Cloud, dan pastikan Identity Toolkit API aktif.";
+  }
+  if (code.includes("unauthorized-domain")) {
+    return "Domain website belum diizinkan. Tambahkan anora009-ui.github.io di Firebase Authentication → Settings → Authorized domains.";
+  }
+  if (code.includes("operation-not-allowed")) {
+    return action + " belum aktif. Aktifkan provider Google dan/atau Anonymous di Firebase Authentication → Sign-in method.";
+  }
+  if (code.includes("network-request-failed")) {
+    return "Koneksi Firebase gagal. Pastikan website dibuka dari link HTTPS GitHub Pages, bukan preview file/WhatsApp.";
+  }
+  return action + " gagal (" + code + "): " + (error?.message || "Periksa pengaturan Firebase.");
+}
+
+window.loginWithGoogle = async function () {
+  try {
+    if (location.protocol !== "https:" && location.hostname !== "localhost") {
+      const message = "Buka link GitHub Pages di Chrome (HTTPS), bukan browser WhatsApp/preview, lalu login lagi.";
+      setAuthStatus(message);
+      toast("Buka di Chrome dulu.");
+      return;
+    }
+    setAuthStatus("Menghubungkan akun Google…");
+    await setPersistence(auth, browserLocalPersistence);
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (popupError) {
+      const code = popupError?.code || "";
+      if (["auth/popup-blocked", "auth/popup-closed-by-user", "auth/cancelled-popup-request",
+           "auth/web-storage-unsupported"].includes(code)) {
+        setAuthStatus("Melanjutkan login Google…");
+        await signInWithRedirect(auth, googleProvider);
+        return;
+      }
+      throw popupError;
+    }
+  } catch (error) {
+    console.error("Google sign-in error:", error);
+    const message = explainFirebaseError(error, "Google login");
+    setAuthStatus(message);
+    toast(message);
+  }
+};
+window.loginAsGuest = async function () {
+  try {
+    if (location.protocol !== "https:" && location.hostname !== "localhost") {
+      setAuthStatus("Buka website dari alamat HTTPS GitHub Pages, bukan preview file lokal/WhatsApp, untuk login.");
+      toast("Buka link website HTTPS dulu.");
+      return;
+    }
+    setAuthStatus("Sedang masuk sebagai Guest…");
+    await setPersistence(auth, browserLocalPersistence);
+    await signInAnonymously(auth);
+  } catch (error) {
+    console.error("Anonymous sign-in error:", error);
+    const message = explainFirebaseError(error, "Guest login");
+    setAuthStatus(message);
+    toast(message);
+  }
+};
+
+window.logout = async function () {
+  try {
+    await signOut(auth);
+    toast("You have signed out.");
+  } catch (error) {
+    console.error("Sign-out error:", error);
+    toast("Could not sign out.");
+  }
+};
+
+// Complete the Google redirect flow and show any returned error.
+getRedirectResult(auth).catch((error) => {
+  console.error("Google redirect result error:", error);
+  const message = explainFirebaseError(error, "Google login");
+  setAuthStatus(message);
+  toast(message);
+});
+
+// Keep the arcade profile and auth buttons in sync with Firebase.
+onAuthStateChanged(auth, (user) => {
+  currentFirebaseUser = user;
+  if (user) startPresence(user);
+  else stopPresence();
+  const googleBtn = document.getElementById("googleLoginBtn");
+  const guestBtn = document.getElementById("guestLoginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  if (user) {
+    const displayName = user.displayName ||
+      (user.isAnonymous ? "Guest Player" : (user.email ? user.email.split("@")[0] : "Player"));
+    player = displayName.slice(0, 18);
+    localStorage.setItem("169name", player);
+    setAuthStatus(user.isAnonymous
+      ? "Signed in anonymously • Guest account"
+      : "Signed in with Google • " + (user.email || "Google account"));
+    if (googleBtn) googleBtn.style.display = "none";
+    if (guestBtn) guestBtn.style.display = "none";
+    if (logoutBtn) logoutBtn.style.display = "inline-flex";
+  } else {
+    setAuthStatus("Not signed in — choose Google Login or Play as Guest.");
+    if (googleBtn) googleBtn.style.display = "inline-flex";
+    if (guestBtn) guestBtn.style.display = "inline-flex";
+    if (logoutBtn) logoutBtn.style.display = "none";
+  }
+  updateProfile();
+});
+
+const questions=[
+{q:"Which planet is known as the Red Planet?",a:["Venus","Mars","Jupiter","Mercury"],c:1},
+{q:"What is the capital of Japan?",a:["Seoul","Beijing","Tokyo","Bangkok"],c:2},
+{q:"How many sides does a hexagon have?",a:["5","6","7","8"],c:1},
+{q:"Which ocean is the largest?",a:["Atlantic","Indian","Arctic","Pacific"],c:3},
+{q:"What is the chemical symbol for gold?",a:["Ag","Gd","Au","Go"],c:2},
+{q:"Which animal is the tallest in the world?",a:["Elephant","Giraffe","Ostrich","Camel"],c:1},
+{q:"How many days are in a leap year?",a:["364","365","366","367"],c:2},
+{q:"Which language is primarily spoken in Brazil?",a:["Spanish","Portuguese","French","English"],c:1},
+{q:"What is the smallest prime number?",a:["0","1","2","3"],c:2},
+{q:"Which country is famous for the Eiffel Tower?",a:["Italy","Germany","France","Spain"],c:2}
+];
+const words=[["PLANET","PLENAT"],["ORANGE","ROGANE"],["FRIEND","NIFRED"],["GALAXY","XYAGAL"],["PUZZLE","ZLEPUZ"],["GARDEN","DENGAR"],["POCKET","TEKPOC"],["STREAM","MRAEST"]];
+let player=localStorage.getItem("169name")||"Player",xp=+(localStorage.getItem("169xp")||0),wins=+(localStorage.getItem("169wins")||0),streak=+(localStorage.getItem("169streak")||1);
+let quizIndex=0,quizScore=0,quizTimer=null,reactTimer=null,reactStart=0,reactState="idle",wordIndex=0,wordScore=0,wordTime=30,wordTimer=null;
+function updateProfile(){document.getElementById("playerName").textContent=player;document.getElementById("avatar").textContent=player.slice(0,1).toUpperCase();document.getElementById("xp").textContent=xp;document.getElementById("wins").textContent=wins;document.getElementById("streak").textContent=streak+" 🔥"}
+function save(){localStorage.setItem("169xp",xp);localStorage.setItem("169wins",wins);localStorage.setItem("169streak",streak);updateProfile()}
+function toast(msg){let t=document.getElementById("toast");t.textContent=msg;t.style.display="block";clearTimeout(t._t);t._t=setTimeout(()=>t.style.display="none",2400)}
+function setName(){let n=prompt("Choose your player name:",player);if(n&&n.trim()){player=n.trim().slice(0,18);localStorage.setItem("169name",player);updateProfile()}}
+const roomCode = () => {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const bytes = new Uint8Array(6);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, b => alphabet[b % alphabet.length]).join("");
+};
+const safeText = (value) => String(value ?? "").replace(/[&<>\"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'\"':"&quot;","'":"&#39;"}[ch]));
+function requireLogin(){if(!currentFirebaseUser){toast("Login dulu sebelum membuat atau masuk room.");setAuthStatus("Please sign in before joining a room.");return false;}return true;}
+function startPresence(user){
+  const presenceRef=ref(db,`presence/${user.uid}`);
+  set(presenceRef,{name:user.displayName || player || "Player",lastSeen:serverTimestamp()}).catch(err=>console.warn("Presence:",err));
+  onDisconnect(presenceRef).remove().catch(()=>{});
+  if(presenceStop)presenceStop();
+  presenceStop=onValue(ref(db,"presence"),snap=>{const n=snap.exists()?Object.keys(snap.val()||{}).length:0;const el=document.getElementById("onlineCount");if(el)el.textContent=n;});
+}
+function stopPresence(){if(presenceStop){presenceStop();presenceStop=null;}}
+async function createRoom(){
+  if(!requireLogin())return;
+  const code=roomCode();
+  const uid=currentFirebaseUser.uid;
+  const name=currentFirebaseUser.displayName || player || "Player";
+  try{
+    await set(ref(db,`rooms/${code}`),{code,ownerUid:uid,status:"lobby",createdAt:serverTimestamp(),members:{[uid]:{name,isAnonymous:!!currentFirebaseUser.isAnonymous,joinedAt:Date.now()}}});
+    await onDisconnect(ref(db,`rooms/${code}/members/${uid}`)).remove();
+    watchRoom(code);
+  }catch(error){
+    console.error("Create room:",error);
+    const message = error.code === "PERMISSION_DENIED" || error.message?.toLowerCase().includes("permission")
+      ? "Room belum bisa dibuat: Realtime Database Rules belum mengizinkan user login. Pasang rules yang disertakan bersama file ini."
+      : "Room gagal dibuat ("+(error.code||"error")+"): "+(error.message||"Periksa Firebase Realtime Database.");
+    setAuthStatus(message); toast(message);
+  }
+}
+async function joinRoom(){
+  if(!requireLogin())return;
+  const code=document.getElementById("roomInput").value.trim().toUpperCase();
+  if(!code)return toast("Masukkan kode room dulu.");
+  const uid=currentFirebaseUser.uid;
+  try{
+    const roomSnap=await get(ref(db,`rooms/${code}`));
+    if(!roomSnap.exists())return toast("Kode room tidak ditemukan.");
+    const room=roomSnap.val();
+    if(room.status==="closed")return toast("Room ini sudah ditutup.");
+    const membersRef=ref(db,`rooms/${code}/members`);
+    const result=await runTransaction(membersRef,members=>{
+      members=members||{};
+      if(members[uid])return members;
+      if(Object.keys(members).length>=20)return;
+      members[uid]={name:currentFirebaseUser.displayName||player||"Guest Player",isAnonymous:!!currentFirebaseUser.isAnonymous,joinedAt:Date.now()};
+      return members;
+    });
+    if(!result.committed)return toast("Room penuh (maksimal 20 pemain).");
+    await onDisconnect(ref(db,`rooms/${code}/members/${uid}`)).remove();
+    document.getElementById("roomInput").value="";
+    watchRoom(code);
+  }catch(error){
+    console.error("Join room:",error);
+    const message = error.code === "PERMISSION_DENIED" || error.message?.toLowerCase().includes("permission")
+      ? "Tidak bisa join: Realtime Database Rules belum mengizinkan akses anggota room. Pasang rules yang disertakan."
+      : "Tidak bisa masuk room ("+(error.code||"error")+"): "+(error.message||"Periksa koneksi Firebase.");
+    setAuthStatus(message); toast(message);
+  }
+}
+function watchRoom(code){
+  if(stopRoomListener)stopRoomListener();
+  activeRoomCode=code;
+  stopRoomListener=onValue(ref(db,`rooms/${code}`),snap=>{
+    if(!snap.exists()){activeRoomCode=null;activeRoomData=null;document.getElementById("gameContent").innerHTML="<p>Room sudah ditutup.</p>";return;}
+    activeRoomData=snap.val();renderRoom(activeRoomData);
+  },error=>{console.error("Room listener:",error);toast("Gagal memuat room: "+error.message);});
+  document.getElementById("modalTitle").textContent="GROUP ROOM";
+  document.getElementById("gameContent").innerHTML="<p style=\"text-align:center;color:var(--muted)\">Connecting to room...</p>";
+  showModal();
+}
+function renderRoom(room){
+  const members=Object.entries(room.members||{});
+  const isHost=currentFirebaseUser?.uid===room.ownerUid;
+  const code=room.code||activeRoomCode;
+  const memberRows=members.map(([uid,m])=>`<div style=\"display:flex;justify-content:space-between;gap:10px;padding:10px 12px;background:#202644;border-radius:10px;margin:7px 0\"><span>${safeText(m.name||"Player")}${uid===room.ownerUid?" 👑":""}</span><small style=\"color:var(--muted)\">${uid===currentFirebaseUser?.uid?"YOU":"JOINED"}</small></div>`).join("");
+  let gamePanel="";
+  if(room.game?.type==="quiz" && room.status==="playing"){
+    const g=room.game, q=questions[g.questionIndex];
+    if(q){const myAnswer=g.answers?.[currentFirebaseUser.uid];const answered=Object.keys(g.answers||{}).length;gamePanel=`<div style=\"border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:14px\"><div style=\"color:var(--cyan);font-size:12px\">QUESTION ${g.questionIndex+1}/${questions.length} • ${answered}/${members.length} ANSWERED</div><div class=\"question\">${safeText(q.q)}</div>${myAnswer?`<p style=\"color:var(--lime)\">Answer submitted! Waiting for the group...</p>`:`<div class=\"answers\">${q.a.map((a,i)=>`<button class=\"answer\" onclick=\"submitRoomAnswer(${i})\">${String.fromCharCode(65+i)}. ${safeText(a)}</button>`).join("")}</div>`}<p style=\"color:var(--muted);font-size:12px\">Your score: ${g.scores?.[currentFirebaseUser.uid]||0}</p>${isHost&&answered>=members.length?`<button class=\"btn primary\" onclick=\"nextRoomQuestion()\">${g.questionIndex===questions.length-1?"Show results":"Next question →"}</button>`:""}</div>`;}
+    else gamePanel=`<div class=\"result\"><h2>🏆 QUIZ FINISHED</h2>${members.map(([uid,m])=>`<p>${safeText(m.name)} — ${room.game.scores?.[uid]||0} points</p>`).join("")}<button class=\"btn secondary\" onclick=\"leaveRoom()\">Leave room</button></div>`;
+  } else if(room.game?.type==="quiz" && room.status==="finished"){
+    gamePanel=`<div class=\"result\"><div class=\"big\">🏆</div><h2>QUIZ FINISHED</h2>${members.map(([uid,m])=>`<p>${safeText(m.name)} — ${room.game.scores?.[uid]||0} points</p>`).join("")}<button class=\"btn secondary\" onclick=\"leaveRoom()\">Leave room</button></div>`;
+  }
+  document.getElementById("modalTitle").textContent=room.status==="playing"?"🧠 GROUP QUIZ":"🏠 ROOM • "+code;
+  document.getElementById("gameContent").innerHTML=`<div class=\"roomcode\">${safeText(code)}</div><p style=\"text-align:center;color:var(--muted)\">Share this code with your friends. ${members.length}/20 players connected.</p><div style=\"display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:16px\"><button class=\"btn primary\" onclick=\"copyRoomCode()\">Copy code</button><button class=\"btn secondary\" onclick=\"shareRoomCode()\">Share invite</button></div><h3 style=\"margin:12px 0 8px\">Players in this room</h3>${memberRows||"<p>Waiting for players...</p>"}${room.status==="lobby"?(isHost?`<button class=\"btn primary\" style=\"width:100%;margin-top:14px\" onclick=\"startRoomQuiz()\">Start Quiz Battle for everyone</button>`:`<p style=\"text-align:center;color:var(--muted)\">Waiting for the room host to start the game...</p>`):gamePanel}<button class=\"btn ghost\" style=\"width:100%;margin-top:12px\" onclick=\"leaveRoom()\">Leave room</button>`;
+}
+async function copyTextFallback(text){
+  const area=document.createElement("textarea"); area.value=text; area.setAttribute("readonly","");
+  area.style.position="fixed"; area.style.top="0"; area.style.left="0";
+  area.style.width="2px"; area.style.height="2px"; area.style.opacity="0.01";
+  document.body.appendChild(area); area.focus(); area.select(); area.setSelectionRange(0,area.value.length);
+  let ok=false; try{ok=document.execCommand("copy");}catch(e){console.warn("Clipboard fallback:",e)}
+  area.remove(); return ok;
+}
+async function copyRoomCode(){
+  if(!activeRoomCode)return;
+  try{
+    if(navigator.clipboard && window.isSecureContext){await navigator.clipboard.writeText(activeRoomCode);toast("Room code berhasil disalin!");return;}
+    if(await copyTextFallback(activeRoomCode)){toast("Room code berhasil disalin!");return;}
+  }catch(e){console.warn("Clipboard API:",e)}
+  prompt("Salin kode room ini:",activeRoomCode);
+}
+async function shareRoomCode(){if(!activeRoomCode)return;const url=location.origin+location.pathname+"?room="+activeRoomCode;const data={title:"Join my 169 ARCADE room",text:"Join my game! Room code: "+activeRoomCode,url};try{if(navigator.share)await navigator.share(data);else{const invite=data.text+" "+url;if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(invite);toast("Invite berhasil disalin!");}else if(await copyTextFallback(invite)){toast("Invite berhasil disalin!");}else{prompt("Salin undangan ini:",invite);}}}catch(e){if(e.name!=="AbortError")toast("Room code: "+activeRoomCode);}}
+async function startRoomQuiz(){if(!activeRoomCode||currentFirebaseUser?.uid!==activeRoomData?.ownerUid)return;try{await update(ref(db,`rooms/${activeRoomCode}`),{status:"playing",game:{type:"quiz",questionIndex:0,answers:{},scores:{}}});}catch(e){toast("Could not start game: "+e.message);}}
+async function submitRoomAnswer(choice){if(!activeRoomCode||!activeRoomData?.game)return;const uid=currentFirebaseUser.uid;try{await runTransaction(ref(db,`rooms/${activeRoomCode}/game`),g=>{if(!g||g.answers?.[uid])return;const q=questions[g.questionIndex];if(!q)return;g.answers=g.answers||{};g.scores=g.scores||{};const correct=choice===q.c;g.answers[uid]={choice,correct};g.scores[uid]=(g.scores[uid]||0)+(correct?100:0);return g;});}catch(e){toast("Answer not saved: "+e.message);}}
+async function nextRoomQuestion(){if(!activeRoomCode||currentFirebaseUser?.uid!==activeRoomData?.ownerUid)return;const g=activeRoomData.game||{};if(Object.keys(g.answers||{}).length<Object.keys(activeRoomData.members||{}).length)return toast("Tunggu semua pemain menjawab dulu.");if(g.questionIndex>=questions.length-1){await update(ref(db,`rooms/${activeRoomCode}`),{status:"finished","game/questionIndex":questions.length});return;}await update(ref(db,`rooms/${activeRoomCode}/game`),{questionIndex:g.questionIndex+1,answers:{}});}
+async function leaveRoom(){if(!activeRoomCode)return;const code=activeRoomCode,uid=currentFirebaseUser?.uid;try{if(uid)await remove(ref(db,`rooms/${code}/members/${uid}`));}catch(e){console.warn(e);}if(stopRoomListener){stopRoomListener();stopRoomListener=null;}activeRoomCode=null;activeRoomData=null;closeModal();}
+async function closeRoom(){if(!activeRoomCode||currentFirebaseUser?.uid!==activeRoomData?.ownerUid)return leaveRoom();try{await update(ref(db,`rooms/${activeRoomCode}`),{status:"finished"});}catch(e){console.warn(e);}leaveRoom();}
+
+function showModal(){document.getElementById("modal").classList.add("show")}
+function closeModal(){document.getElementById("modal").classList.remove("show");clearInterval(quizTimer);clearInterval(wordTimer);clearTimeout(reactTimer)}
+function outsideClose(e){if(e.target.id==="modal")closeModal()}
+function openGame(type){setName();clearInterval(quizTimer);clearInterval(wordTimer);clearTimeout(reactTimer);showModal();if(type==="quiz")startQuiz();if(type==="reaction")startReaction();if(type==="word")startWord();if(type==="wyr")startWyr()}
+function startQuiz(){quizIndex=0;quizScore=0;document.getElementById("modalTitle").textContent="🧠 QUIZ BATTLE";renderQuiz()}
+function renderQuiz(){let q=questions[quizIndex];if(!q){return quizEnd()}document.getElementById("gameContent").innerHTML=`<div style="display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-bottom:10px"><span>QUESTION ${quizIndex+1}/${questions.length}</span><span>SCORE: ${quizScore}</span></div><div class="progress"><div style="width:${quizIndex/questions.length*100}%"></div></div><div class="question">${q.q}</div><div class="answers">${q.a.map((v,i)=>`<button class="answer" onclick="answerQuiz(${i})">${String.fromCharCode(65+i)}. ${v}</button>`).join("")}</div>`}
+function answerQuiz(i){let q=questions[quizIndex];let buttons=document.querySelectorAll(".answer");buttons[i].classList.add(i===q.c?"correct":"wrong");if(i===q.c){quizScore+=100;xp+=10}else{buttons[q.c].classList.add("correct")}setTimeout(()=>{quizIndex++;renderQuiz()},650)}
+function quizEnd(){if(quizScore>=500)wins++;save();document.getElementById("gameContent").innerHTML=`<div class="result"><div class="big">🏆</div><h2>QUIZ COMPLETE!</h2><p>You scored <b>${quizScore}</b> points</p><p>+${Math.round(quizScore/10)} XP earned</p><button class="btn primary" onclick="startQuiz()">Play again</button> <button class="btn secondary" onclick="closeModal()">Back to lobby</button></div>`}
+function startReaction(){document.getElementById("modalTitle").textContent="⚡ REACTION RACE";reactState="idle";document.getElementById("gameContent").innerHTML=`<p style="color:var(--muted);text-align:center">Tap the box when it turns GREEN. Don't tap too early!</p><div id="reactionBox" class="reactionbox" onclick="reactionClick()">TAP TO START</div><p id="reactionResult" style="text-align:center;color:var(--muted)">Ready?</p>`}
+function reactionClick(){let b=document.getElementById("reactionBox"),r=document.getElementById("reactionResult");if(reactState==="idle"){reactState="wait";b.className="reactionbox wait";b.textContent="WAIT FOR GREEN...";r.textContent="Don't click yet!";reactTimer=setTimeout(()=>{reactState="go";reactStart=performance.now();b.className="reactionbox go";b.textContent="TAP NOW!";},1500+Math.random()*3500)}else if(reactState==="wait"){clearTimeout(reactTimer);reactState="idle";b.className="reactionbox";b.textContent="TOO EARLY!";r.textContent="Try again.";xp=Math.max(0,xp-2);save()}else if(reactState==="go"){let ms=Math.round(performance.now()-reactStart);reactState="idle";b.className="reactionbox";b.textContent=ms+" ms";r.textContent=ms<250?"⚡ Lightning fast!":ms<350?"🔥 Great reaction!":"Keep practicing!";xp+=Math.max(5,Math.round(500/ms*10));if(ms<300)wins++;save()}}
+function startWord(){document.getElementById("modalTitle").textContent="🔤 WORD SCRAMBLE";wordIndex=0;wordScore=0;wordTime=45;renderWord();wordTimer=setInterval(()=>{wordTime--;let t=document.getElementById("wordtime");if(t)t.textContent=wordTime;if(wordTime<=0){clearInterval(wordTimer);wordEnd()}},1000)}
+function renderWord(){let w=words[wordIndex%words.length];document.getElementById("gameContent").innerHTML=`<div style="display:flex;justify-content:space-between;color:var(--muted)"><span>WORD ${wordIndex+1}/${words.length}</span><span>⏱ <b id="wordtime">${wordTime}</b>s</span></div><div class="worddisplay">${w[1]}</div><p style="text-align:center;color:var(--muted)">Unscramble this word</p><input class="scrambleinput" id="wordinput" placeholder="Your answer..." autocomplete="off"><button class="btn primary" style="width:100%" onclick="submitWord()">Submit answer</button><p style="text-align:center;color:var(--muted)">Score: ${wordScore}</p>`;document.getElementById("wordinput").focus()}
+function submitWord(){let val=document.getElementById("wordinput").value.trim().toUpperCase(),w=words[wordIndex%words.length];if(val===w[0]){wordScore+=100;xp+=10;toast("Correct! +100 points 🎉")}else toast("Not quite! Answer: "+w[0]);wordIndex++;if(wordIndex>=words.length){wordEnd()}else renderWord()}
+function wordEnd(){clearInterval(wordTimer);if(wordScore>=400)wins++;save();document.getElementById("gameContent").innerHTML=`<div class="result"><div class="big">🔤</div><h2>TIME'S UP!</h2><p>Final score: <b>${wordScore}</b></p><button class="btn primary" onclick="startWord()">Play again</button> <button class="btn secondary" onclick="closeModal()">Lobby</button></div>`}
+const wyr=[["Would you rather be able to fly or become invisible?","🪽 Fly","👻 Invisible"],["Would you rather travel to the past or future?","⏳ Past","🚀 Future"],["Would you rather have unlimited money or unlimited time?","💰 Money","⌛ Time"],["Would you rather never use social media or never watch movies?","📵 No social media","🎬 No movies"],["Would you rather live by the beach or in the mountains?","🏖️ Beach","🏔️ Mountains"]];
+function startWyr(){document.getElementById("modalTitle").textContent="🤔 WOULD YOU RATHER?";let q=wyr[Math.floor(Math.random()*wyr.length)];document.getElementById("gameContent").innerHTML=`<div class="question" style="text-align:center">${q[0]}</div><div class="answers"><button class="answer" onclick="wyrVote(0)">${q[1]}</button><button class="answer" onclick="wyrVote(1)">${q[2]}</button></div><p style="text-align:center;color:var(--muted)">Demo vote • no group poll synced yet</p>`}
+function wyrVote(i){xp+=5;save();document.getElementById("gameContent").innerHTML=`<div class="result"><div class="big">${i?"🌟":"✨"}</div><h2>YOUR CHOICE IS LOCKED!</h2><p>In multiplayer, group votes will appear here.</p><button class="btn primary" onclick="startWyr()">Next question</button><button class="btn secondary" onclick="closeModal()">Lobby</button></div>`}
+function resetStats(){if(confirm("Reset local stats?")){xp=0;wins=0;streak=1;save();toast("Stats reset")}}
+
+// The page uses inline onclick attributes, so expose the existing game functions
+// on window because this script now runs as an ES module.
+Object.assign(window, {
+  toast, setName, createRoom, joinRoom, showModal, closeModal, outsideClose,
+  openGame, answerQuiz, reactionClick, submitWord, startQuiz, startWord,
+  startWyr, wyrVote, resetStats, copyRoomCode, shareRoomCode, startRoomQuiz,
+  submitRoomAnswer, nextRoomQuestion, leaveRoom, closeRoom
+});
+
+const invitedRoom=new URLSearchParams(location.search).get("room");
+if(invitedRoom){const roomField=document.getElementById("roomInput");if(roomField)roomField.value=invitedRoom.toUpperCase();}
+
+updateProfile();
+if(location.protocol !== "https:" && location.hostname !== "localhost") {
+  setAuthStatus("PENTING: buka versi HTTPS GitHub Pages agar Firebase Login dan Room bisa bekerja.");
+}
+if(new URLSearchParams(location.search).has("owner"))document.getElementById("admin").style.display="block";
+</script>
+</body>
+</html>
